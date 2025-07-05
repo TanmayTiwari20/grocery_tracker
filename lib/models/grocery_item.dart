@@ -4,6 +4,8 @@ class GroceryItem {
   final String quantity;
   final DateTime addedOn;
   final DateTime expiryDate;
+  final String? category;
+  final String? notes;
 
   GroceryItem({
     this.id,
@@ -11,6 +13,8 @@ class GroceryItem {
     required this.quantity,
     required this.addedOn,
     required this.expiryDate,
+    this.category,
+    this.notes,
   });
 
   GroceryItem copyWith({
@@ -19,6 +23,8 @@ class GroceryItem {
     String? quantity,
     DateTime? expiryDate,
     DateTime? addedOn,
+    String? category,
+    String? notes,
   }) {
     return GroceryItem(
       id: id ?? this.id,
@@ -26,6 +32,8 @@ class GroceryItem {
       quantity: quantity ?? this.quantity,
       expiryDate: expiryDate ?? this.expiryDate,
       addedOn: addedOn ?? this.addedOn,
+      category: category ?? this.category,
+      notes: notes ?? this.notes,
     );
   }
 
@@ -36,6 +44,8 @@ class GroceryItem {
       'quantity': quantity,
       'added_on': addedOn.toIso8601String(),
       'expiry_date': expiryDate.toIso8601String(),
+      'category': category,
+      'notes': notes,
     };
   }
 
@@ -46,6 +56,8 @@ class GroceryItem {
       quantity: map['quantity'],
       expiryDate: DateTime.parse(map['expiry_date']),
       addedOn: DateTime.parse(map['added_on']),
+      category: map['category'],
+      notes: map['notes'],
     );
   }
 }

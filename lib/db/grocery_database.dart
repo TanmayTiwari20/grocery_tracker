@@ -18,20 +18,33 @@ class GroceryDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, fileName);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _createDB,
+      onUpgrade: _upgradeDB,
+    );
   }
 
-  Future<Database> _createDB(Database db, int version) async {
+  Future<void> _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE groceries (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      quantity TEXT NOT NULL,
-      expiry_date TEXT NOT NULL,
-      added_on TEXT NOT NULL
-    )
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        quantity TEXT NOT NULL,
+        expiry_date TEXT NOT NULL,
+        added_on TEXT NOT NULL,
+        category TEXT,
+        notes TEXT
+      )
     ''');
-    return db;
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE groceries ADD COLUMN category TEXT');
+      await db.execute('ALTER TABLE groceries ADD COLUMN notes TEXT');
+    }
   }
 
   Future<GroceryItem> insert(GroceryItem item) async {
